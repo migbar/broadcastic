@@ -30,5 +30,11 @@ Broadcastic uses pusher's async style of invocation and therefore needs to be ru
 
 ### broadcasting ActiveRecord changes:
 
-  broadcast :changes, to: :admins
 
+  	class Product < ActiveRecord::Base
+    	broadcast :changes to: admins
+
+    	def admins
+    		User.with_role :admin
+    	end
+  	end
