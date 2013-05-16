@@ -5,7 +5,9 @@ Broadcastic gem
 
 Add broadcastic to your Gemfile, and then run `bundle install`
 
+```ruby
     gem 'broadcastic'
+```
 
 or install via gem
 
@@ -30,7 +32,7 @@ Broadcastic uses pusher's async style of invocation and therefore needs to be ru
 
 ### broadcasting ActiveRecord changes:
 
-
+```ruby
   	class Product < ActiveRecord::Base
     	broadcast :changes to: admins
 
@@ -38,3 +40,4 @@ Broadcastic uses pusher's async style of invocation and therefore needs to be ru
     		User.with_role :admin
     	end
   	end
+```
