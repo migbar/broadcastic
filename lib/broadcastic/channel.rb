@@ -2,6 +2,18 @@ module Broadcastic
   class Channel
     attr_reader :name
 
+    def self.destinations_for(resource, options)
+      to = options[:to]
+      case to
+      when String then
+        Array(Channel[to])
+      when Symbol then
+        Array(Channel.for resource.send(to))
+      else
+        Array(Channel.default_for(resource))
+      end
+    end
+
     def self.channels
       @channels ||= {}
     end

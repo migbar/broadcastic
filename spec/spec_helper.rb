@@ -4,8 +4,10 @@ rescue LoadError
   puts 'although not required, it is recommended that you use bundler when running the tests'
 end
 
+require 'ostruct'
 require 'rspec'
 require 'active_record'
+
 require_relative '../lib/broadcastic'
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')

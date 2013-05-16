@@ -1,8 +1,8 @@
 module Broadcastic
   class Broadcaster
-  	def self.broadcast(event)
+  	def self.broadcast(events)
   		puts "********* FIRING *********"
-  		event.fire!
+  		Array(events).map(&:fire!)
   		puts "****** FIRING DONE *******"
   	end
   end
