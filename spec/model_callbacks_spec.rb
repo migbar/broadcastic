@@ -105,24 +105,4 @@ describe Broadcastic::ModelCallbacks do
 	end
 
 
-	it "Should call broadcast event after creation" do
-		undefine_product_class
-
-		class Product < ActiveRecord::Base; end
-		foo = stub
-		event = stub
-		# Broadcastic::ModelCallbacks.should_receive(:created).with(foo).and_return(event)
-		# Broadcastic::Broadcaster.should_receive(:broadcast).with(event)
-
-		class Product < ActiveRecord::Base
-			broadcast :creations, to: :admins
-			def admins
-				[OpenStruct.new(id: 3)]
-			end
-		end
-		Product.delete_all
-		foo = Product.create(name: "foo")
-
-	end
-
 end

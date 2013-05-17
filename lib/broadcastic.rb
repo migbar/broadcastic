@@ -1,3 +1,4 @@
+require_relative 'broadcastic/monkey_patches'
 require_relative 'broadcastic/broadcast'
 require_relative 'broadcastic/broadcaster'
 require_relative 'broadcastic/channel'
