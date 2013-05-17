@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe Broadcastic::ModelCallbacks do
 
+	before(:each) do
+		undefine_product_class
+		class Product < ActiveRecord::Base; end
+	end
+
 	context "with a single event" do
 		context "without options" do
 			let(:no_options) { {} }
@@ -103,6 +108,5 @@ describe Broadcastic::ModelCallbacks do
 			end
 
 	end
-
 
 end
