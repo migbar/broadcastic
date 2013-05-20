@@ -60,20 +60,20 @@ describe Broadcastic::Broadcast do
 
 	context "without options" do
 
-		it "should send the appropriate message to ModelCallbacks for each callback type" do
+		it "should send the appropriate message to Callbacks for each callback type" do
 		  undefine_product_class
 		  class Product < ActiveRecord::Base; end
-			Broadcastic::ModelCallbacks.should_receive(:broadcast_changes).with(Product, {})
+			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {})
 			class Product < ActiveRecord::Base
 				broadcast :changes
 			end
 		end
 
-		it "should send the appropriate message to ModelCallbacks for each callback type" do
+		it "should send the appropriate message to Callbacks for each callback type" do
 		  undefine_product_class
 		  class Product < ActiveRecord::Base; end
-			Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, {})
-			Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, {})
+			Broadcastic::Callbacks.should_receive(:broadcast_creations).with(Product, {})
+			Broadcastic::Callbacks.should_receive(:broadcast_updates).with(Product, {})
 			class Product < ActiveRecord::Base
 				broadcast :creations, :updates
 			end
@@ -86,7 +86,7 @@ describe Broadcastic::Broadcast do
 		it "should pass the destination options to the ModelCallbaks" do
 		  undefine_product_class
 		  class Product < ActiveRecord::Base; end
-			Broadcastic::ModelCallbacks.should_receive(:broadcast_changes).with(Product, {to: :vendors})
+			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {to: :vendors})
 			class Product < ActiveRecord::Base
 				broadcast :changes, to: :vendors
 			end

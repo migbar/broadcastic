@@ -1,5 +1,5 @@
 module Broadcastic
-  module ModelCallbacks
+  module Callbacks
     extend self
 
     def broadcast_changes(klass, options)

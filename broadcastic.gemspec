@@ -12,11 +12,12 @@ Gem::Specification.new do |s|
   s.summary     = %q{ActiveRecord callback broadcaster over Pusher}
   s.description = %q{Easily broadcast your ActiveRecord callbacks using pusher's REST api}
 
+  s.add_dependency 'json', '~> 1.7.7'
   s.add_dependency "pusher", "~> 0.11.3"
-  s.add_dependency "sqlite3"
   s.add_dependency "activerecord", ">= 3.0.0"
 
   s.add_development_dependency "rspec", "~> 2.0"
+  s.add_development_dependency "sqlite3"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

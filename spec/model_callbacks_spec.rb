@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe Broadcastic::ModelCallbacks do
+module Broadcastic
+
+describe Callbacks do
 
 	before(:each) do
 		undefine_product_class
@@ -12,7 +14,7 @@ describe Broadcastic::ModelCallbacks do
 			let(:no_options) { {} }
 
 			it "Should setup the creation callbacks when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_creations).with(Product, no_options)
 
 				class Product < ActiveRecord::Base
 					broadcast :creations
@@ -20,7 +22,7 @@ describe Broadcastic::ModelCallbacks do
 			end
 
 			it "Should setup the update callbacks when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_updates).with(Product, no_options)
 
 				class Product < ActiveRecord::Base
 					broadcast :updates
@@ -28,7 +30,7 @@ describe Broadcastic::ModelCallbacks do
 			end
 
 			it "Should setup the destroy callbacks when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_destroys).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_destroys).with(Product, no_options)
 
 				class Product < ActiveRecord::Base
 					broadcast :destroys
@@ -36,9 +38,9 @@ describe Broadcastic::ModelCallbacks do
 			end
 
 			it "Should setup all callbacks when :changes are invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, no_options)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, no_options)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_destroys).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_creations).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_updates).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_destroys).with(Product, no_options)
 
 				class Product < ActiveRecord::Base
 					broadcast :changes
@@ -51,7 +53,7 @@ describe Broadcastic::ModelCallbacks do
 			let(:vendors) { {to: :vendors} }
 
 			it "Should setup the callbacks with the correct destination" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_destroys).with(Product, vendors)
+				Callbacks.should_receive(:broadcast_destroys).with(Product, vendors)
 
 				class Product < ActiveRecord::Base
 					broadcast :destroys, to: :vendors
@@ -66,8 +68,8 @@ describe Broadcastic::ModelCallbacks do
 			let(:no_options) { {} }
 
 			it "Should setup the callbacks for each event when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, no_options)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_creations).with(Product, no_options)
+				Callbacks.should_receive(:broadcast_updates).with(Product, no_options)
 
 				class Product < ActiveRecord::Base
 					broadcast :creations, :updates
@@ -80,8 +82,8 @@ describe Broadcastic::ModelCallbacks do
 			let(:vendors) { {to: :vendors} }
 
 			it "Should setup the callbacks for each event when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, vendors)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, vendors)
+				Callbacks.should_receive(:broadcast_creations).with(Product, vendors)
+				Callbacks.should_receive(:broadcast_updates).with(Product, vendors)
 
 				class Product < ActiveRecord::Base
 					broadcast :creations, :updates, to: :vendors
@@ -97,9 +99,9 @@ describe Broadcastic::ModelCallbacks do
 			let(:admins) { {to: :admins} }
 
 			it "Should setup the callbacks for each event when invoked from the class definition" do
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_creations).with(Product, vendors)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_updates).with(Product, vendors)
-				Broadcastic::ModelCallbacks.should_receive(:broadcast_destroys).with(Product, admins)
+				Callbacks.should_receive(:broadcast_creations).with(Product, vendors)
+				Callbacks.should_receive(:broadcast_updates).with(Product, vendors)
+				Callbacks.should_receive(:broadcast_destroys).with(Product, admins)
 
 				class Product < ActiveRecord::Base
 					broadcast :creations, :updates, to: :vendors
@@ -108,5 +110,7 @@ describe Broadcastic::ModelCallbacks do
 			end
 
 	end
+
+end
 
 end

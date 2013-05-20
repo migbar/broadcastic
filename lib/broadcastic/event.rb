@@ -36,16 +36,34 @@ module Broadcastic
     	puts self.to_json
     end
 
+    def resource_type
+      resource.class.name
+    end
+
+    def channel_name
+      channel.name
+    end
+
+    def pusher_channel_name
+      channel.name.gsub(/\//, ".")
+    end
+
+    def pusher_event_name
+      "#{resource_type}.#{type}"
+    end
+
     def to_json
       ActiveSupport::JSON.encode(as_json)
     end
 
     def as_json
       {
-        event:         type,
-        resource_type: resource.class.name,
-        resource:      resource.as_json,
-        channel:       channel.name
+        name:           pusher_event_name,
+        pusher_channel: pusher_channel_name,
+        event:          type,
+        resource_type:  resource_type,
+        resource:       resource.as_json,
+        channel:        channel_name
       }
     end
 
