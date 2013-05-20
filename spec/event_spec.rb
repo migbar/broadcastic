@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-module Broadcastic
-	describe Event do
+
+	describe Broadcastic::Event do
 
 		context	"Event creation with no options" do
 
 			it "creates creation events" do
 				foo = Product.new(name: "foo")
 
-				events = Event.created(foo, {})
+				events = Broadcastic::Event.created(foo, {})
 				event_json = JSON.parse(events.first.to_json)
 
 				expect(events.size).to eq 1
@@ -23,7 +23,7 @@ module Broadcastic
 			it "creates update events" do
 				foo = Product.new(name: "foo")
 
-				events = Event.updated(foo, {})
+				events = Broadcastic::Event.updated(foo, {})
 				event_json = JSON.parse(events.first.to_json)
 
 				expect(events.size).to eq 1
@@ -38,7 +38,7 @@ module Broadcastic
 			it "creates destroyed events" do
 				foo = Product.new(name: "foo")
 
-				events = Event.destroyed(foo, {})
+				events = Broadcastic::Event.destroyed(foo, {})
 				event_json = JSON.parse(events.first.to_json)
 
 				expect(events.size).to eq 1
@@ -56,7 +56,7 @@ module Broadcastic
 			it "creates creation events" do
 				foo = Product.new(name: "foo")
 				foo.stub(recipients: ["/some_path/123"])
-				events = Event.created(foo, {to: :recipients})
+				events = Broadcastic::Event.created(foo, {to: :recipients})
 				event_json = JSON.parse(events.first.to_json)
 
 				expect(events.size).to eq 1
@@ -74,7 +74,7 @@ module Broadcastic
 			it "creates creation events" do
 				foo = Product.new(name: "foo")
 				foo.stub(recipients: ["/some_path/123", "/other_path/345"])
-				events = Event.created(foo, {to: :recipients})
+				events = Broadcastic::Event.created(foo, {to: :recipients})
 
 				expect(events.size).to eq 2
 
@@ -102,4 +102,3 @@ module Broadcastic
 
 		end
 	end
-end

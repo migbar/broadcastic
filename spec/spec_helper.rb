@@ -24,7 +24,10 @@ def undefine_product_class
 end
 
 RSpec.configure do |config|
+
   config.before(:each) do
-    #..
+    undefine_product_class
+    class Product < ActiveRecord::Base; end
   end
+
 end

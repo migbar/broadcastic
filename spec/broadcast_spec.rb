@@ -1,21 +1,20 @@
 require 'spec_helper'
 
-class Product < ActiveRecord::Base; end
-
 describe Broadcastic::Broadcast do
 
 	context "with a valid event" do
-		it "Should undertstand the broadcast method and not raise an exception" do
+		it "undertstands the broadcast method and not raise an exception" do
 			expect  {
 				class Product < ActiveRecord::Base
 					broadcast :changes
 				end
 			}.to_not raise_error(NoMethodError, /undefined method `broadcast'/)
 		end
+
 	end
 
 	context "with an invalid event" do
-		it "Should raise an exception" do
+		it "raises an exception" do
 			expect  {
 				class Product < ActiveRecord::Base
 					broadcast :some_non_existing_callback
@@ -27,8 +26,6 @@ describe Broadcastic::Broadcast do
 	context "with an invalid recipient" do
 
 		it "Should raise an exception about the recipient method being invalid" do
-
-			undefine_product_class
 
 			expect  {
 				class Product < ActiveRecord::Base
@@ -43,8 +40,6 @@ describe Broadcastic::Broadcast do
 
 		it "Should not raise an exception about the recipient method being invalid" do
 
-		  undefine_product_class
-
 			expect  {
 				class Product < ActiveRecord::Base
 					broadcast :creations, to: :vendors
@@ -53,16 +48,15 @@ describe Broadcastic::Broadcast do
 						["vendors/1", "vendors/2"]
 					end
 				end
+				Broadcaster.stub(:broadcast)
 				p = Product.create(name: "foo")
-			}.to_not raise_error(NoMethodError, /undefined method `some_recipient'/)
+			}.to_not raise_error(NoMethodError, /undefined method `vendors'/)
 		end
 	end
 
 	context "without options" do
 
 		it "should send the appropriate message to Callbacks for each callback type" do
-		  undefine_product_class
-		  class Product < ActiveRecord::Base; end
 			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {})
 			class Product < ActiveRecord::Base
 				broadcast :changes
@@ -70,8 +64,6 @@ describe Broadcastic::Broadcast do
 		end
 
 		it "should send the appropriate message to Callbacks for each callback type" do
-		  undefine_product_class
-		  class Product < ActiveRecord::Base; end
 			Broadcastic::Callbacks.should_receive(:broadcast_creations).with(Product, {})
 			Broadcastic::Callbacks.should_receive(:broadcast_updates).with(Product, {})
 			class Product < ActiveRecord::Base
@@ -84,8 +76,6 @@ describe Broadcastic::Broadcast do
 	context "with options" do
 
 		it "should pass the destination options to the ModelCallbaks" do
-		  undefine_product_class
-		  class Product < ActiveRecord::Base; end
 			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {to: :vendors})
 			class Product < ActiveRecord::Base
 				broadcast :changes, to: :vendors

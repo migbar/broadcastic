@@ -3,8 +3,8 @@ require 'spec_helper'
 module Broadcastic
 	describe Broadcaster do
 
-		let(:event1) { stub }
-		let(:event2) { stub }
+		let(:event1) { stub.as_null_object }
+		let(:event2) { stub.as_null_object }
 
 		describe ".broadcast" do
 
@@ -19,7 +19,7 @@ module Broadcastic
 			context "with a single event" do
 				it "should call broadcast_event with the single event passed in" do
 					Broadcaster.should_receive(:broadcast_event).with(event1).once
-					Broadcaster.broadcast(event1)
+					Broadcaster.broadcast([event1])
 				end
 			end
 		end
@@ -27,18 +27,54 @@ module Broadcastic
 
 		describe ".broadcast_event" do
 
-			it "should delegate the broadcast to Pusher" do
-				event1.stub(pusher_channel_name: "some_pusher_channel")
-				event1.stub(pusher_event_name: "some_event_nanme")
-				event1.stub(to_json: "some_json_string")
-				pusher_instance = stub
-				Pusher.should_receive(:trigger_async).with(["some_pusher_channel"], "some_event_nanme", "some_json_string").and_return(pusher_instance)
-				pusher_instance.should_receive(:callback).and_return(pusher_instance)
-				pusher_instance.should_receive(:errback)
 
-				Broadcaster.broadcast_event(event1)
+			context "when running as evented" do
+				before(:each) do
+					Broadcaster.stub(inside_em_loop?: true)
+				end
+
+				it "should asynchronously delegate the broadcast to Pusher" do
+					pusher_instance = stub
+					Pusher.should_receive(:trigger_async).and_return(pusher_instance.as_null_object)
+
+					Broadcaster.broadcast_event(event1)
+				end
+
+				it "passes the channel name, event name and json to pusher" do
+					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
+					event1.should_receive(:pusher_event_name).and_return "some_event_name"
+					event1.should_receive(:to_json).and_return"some_json_string"
+					pusher_instance = stub
+
+					Pusher.should_receive(:trigger_async).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(pusher_instance.as_null_object)
+
+					Broadcaster.broadcast_event(event1)
+				end
 			end
 
+			context "when not running as evented" do
+				before(:each) do
+					Broadcaster.stub(inside_em_loop?: false)
+				end
+
+				it "should asynchronously delegate the broadcast to Pusher" do
+					pusher_instance = stub
+					Pusher.should_receive(:trigger).and_return(pusher_instance.as_null_object)
+
+					Broadcaster.broadcast_event(event1)
+				end
+
+				it "passes the channel name, event name and json to pusher" do
+					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
+					event1.should_receive(:pusher_event_name).and_return "some_event_name"
+					event1.should_receive(:to_json).and_return"some_json_string"
+					pusher_instance = stub
+
+					Pusher.should_receive(:trigger).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(pusher_instance.as_null_object)
+
+					Broadcaster.broadcast_event(event1)
+				end
+			end
 
 		end
 

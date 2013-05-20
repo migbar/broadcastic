@@ -1,6 +1,8 @@
 module Broadcastic
   class Broadcaster
     class << self
+      ASYNC = "async"
+      SYNC = "sync"
 
     	def broadcast(events)
     		Array(events).each do |event|
@@ -10,21 +12,38 @@ module Broadcastic
 
       # private
     	def broadcast_event(event)
-    		Pusher.trigger_async([event.pusher_channel_name], event.pusher_event_name, event.to_json).
-    			callback { succeeded(event) }.
-  				errback  { |error| failed(event, error) }
+        inside_em_loop? ? async_broadcast(event) : sync_broadcast(event)
     	end
 
-    	def succeeded(event)
+      def inside_em_loop?
+        !!(defined?(EventMachine) && EventMachine.reactor_running?)
+      end
+
+      def sync_broadcast(event)
+        begin
+          Pusher.trigger([event.pusher_channel_name], event.pusher_event_name, event.to_json)
+        rescue Exception => error
+          failed(SYNC, event, error)
+        end
+      end
+
+      def async_broadcast(event)
+        Pusher.trigger_async([event.pusher_channel_name], event.pusher_event_name, event.to_json).
+          callback { succeeded(ASYNC, event) }.
+          errback  { |error| failed(ASYNC, event, error) }
+      end
+
+    	def succeeded(mode, event)
     		puts "."*25
-    		puts "PUSHED: event_name: '#{event.resource_type}.#{event.type}' to channel: '#{event.pusher_channel_name}'"
+    		puts "#{mode} - PUSHED: event_name: '#{event.resource_type}.#{event.type}' to channel: '#{event.pusher_channel_name}'"
     		puts event.to_json
     		puts "."*25
     	end
 
-    	def failed(event, error)
+    	def failed(mode, event, error)
   			# error is a instance of Pusher::Error
-  			puts "ERROR #{error.inspect} while async triggering to pusher: \n #{event}"
+  			puts "#{mode} - ERROR #{error.inspect} while triggering to pusher: \n #{event}"
+        raise error
     	end
 
     end
