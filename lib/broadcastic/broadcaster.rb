@@ -36,15 +36,12 @@ module Broadcastic
       end
 
     	def succeeded(mode, event)
-    		Logger.debug "."*25
-    		Logger.debug "#{mode} - PUSHED: event_name: '#{event.resource_type}.#{event.type}' to channel: '#{event.pusher_channel_name}'"
-    		Logger.debug event.to_json
-    		Logger.debug "."*25
+    		Logger.debug "********* #{mode}-push \nto channel: '#{event.pusher_channel_name}' \nevent_name: '#{event.pusher_event_name}' \ndata: #{event.to_json} \n*********\n"
     	end
 
     	def failed(mode, event, error)
   			# error is a instance of Pusher::Error
-  			Logger.error "#{mode} - ERROR #{error.inspect} while triggering to pusher: \n #{event}"
+  			Logger.error "*********\n #{mode} \n ERROR #{error.inspect} while triggering to pusher: \n #{event} \n*********\n"
         raise error
     	end
 
