@@ -32,10 +32,6 @@ module Broadcastic
       @channel  = channel
     end
 
-    def fire!
-    	puts self.to_json
-    end
-
     def resource_type
       resource.class.name
     end
@@ -49,7 +45,11 @@ module Broadcastic
     end
 
     def pusher_event_name
-      "#{resource_type}.#{type}"
+      uncapitalize "#{resource_type}#{type.capitalize}".camelize
+    end
+
+    def uncapitalize(name)
+      name[0, 1].downcase + name[1..-1]
     end
 
     def to_json

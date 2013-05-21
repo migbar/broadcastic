@@ -14,7 +14,7 @@ require 'spec_helper'
 				expect(events.size).to eq 1
 				expect(event_json['resource_type']).to eq "Product"
 				expect(event_json['event']).to eq "created"
-				expect(event_json['name']).to eq "Product.created"
+				expect(event_json['name']).to eq "productCreated"
 				expect(event_json['resource']).to eq foo.as_json
 				expect(event_json['channel']).to eq "/products/#{foo.id}"
 				expect(event_json['pusher_channel']).to eq ".products.#{foo.id}"
@@ -29,7 +29,7 @@ require 'spec_helper'
 				expect(events.size).to eq 1
 				expect(event_json['resource_type']).to eq "Product"
 				expect(event_json['event']).to eq "updated"
-				expect(event_json['name']).to eq "Product.updated"
+				expect(event_json['name']).to eq "productUpdated"
 				expect(event_json['resource']).to eq foo.as_json
 				expect(event_json['channel']).to eq "/products/#{foo.id}"
 				expect(event_json['pusher_channel']).to eq ".products.#{foo.id}"
@@ -44,7 +44,7 @@ require 'spec_helper'
 				expect(events.size).to eq 1
 				expect(event_json['resource_type']).to eq "Product"
 				expect(event_json['event']).to eq "destroyed"
-				expect(event_json['name']).to eq "Product.destroyed"
+				expect(event_json['name']).to eq "productDestroyed"
 				expect(event_json['resource']).to eq foo.as_json
 				expect(event_json['channel']).to eq "/products/#{foo.id}"
 				expect(event_json['pusher_channel']).to eq ".products.#{foo.id}"
@@ -62,7 +62,7 @@ require 'spec_helper'
 				expect(events.size).to eq 1
 				expect(event_json['resource_type']).to eq "Product"
 				expect(event_json['event']).to eq "created"
-				expect(event_json['name']).to eq "Product.created"
+				expect(event_json['name']).to eq "productCreated"
 				expect(event_json['resource']).to eq foo.as_json
 				expect(event_json['channel']).to eq "/some_path/123"
 				expect(event_json['pusher_channel']).to eq ".some_path.123"
@@ -82,7 +82,7 @@ require 'spec_helper'
 
 				expect(first_event_json['resource_type']).to eq "Product"
 				expect(first_event_json['event']).to eq "created"
-				expect(first_event_json['name']).to eq "Product.created"
+				expect(first_event_json['name']).to eq "productCreated"
 				expect(first_event_json['resource']).to eq foo.as_json
 				expect(first_event_json['channel']).to eq "/some_path/123"
 				expect(first_event_json['pusher_channel']).to eq ".some_path.123"
@@ -93,7 +93,7 @@ require 'spec_helper'
 				expect(events.size).to eq 2
 				expect(second_event_json['resource_type']).to eq "Product"
 				expect(second_event_json['event']).to eq "created"
-				expect(second_event_json['name']).to eq "Product.created"
+				expect(second_event_json['name']).to eq "productCreated"
 				expect(second_event_json['resource']).to eq foo.as_json
 				expect(second_event_json['channel']).to eq "/other_path/345"
 				expect(second_event_json['pusher_channel']).to eq ".other_path.345"
