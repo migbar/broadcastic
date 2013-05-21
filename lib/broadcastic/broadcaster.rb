@@ -1,8 +1,9 @@
 module Broadcastic
   class Broadcaster
     class << self
+
       ASYNC = "async"
-      SYNC = "sync"
+      SYNC  = "sync"
 
     	def broadcast(events)
     		Array(events).each do |event|
@@ -22,6 +23,7 @@ module Broadcastic
       def sync_broadcast(event)
         begin
           Pusher.trigger([event.pusher_channel_name], event.pusher_event_name, event.to_json)
+          succeeded(SYNC, event)
         rescue Exception => error
           failed(SYNC, event, error)
         end
@@ -34,15 +36,15 @@ module Broadcastic
       end
 
     	def succeeded(mode, event)
-    		puts "."*25
-    		puts "#{mode} - PUSHED: event_name: '#{event.resource_type}.#{event.type}' to channel: '#{event.pusher_channel_name}'"
-    		puts event.to_json
-    		puts "."*25
+    		Logger.debug "."*25
+    		Logger.debug "#{mode} - PUSHED: event_name: '#{event.resource_type}.#{event.type}' to channel: '#{event.pusher_channel_name}'"
+    		Logger.debug event.to_json
+    		Logger.debug "."*25
     	end
 
     	def failed(mode, event, error)
   			# error is a instance of Pusher::Error
-  			puts "#{mode} - ERROR #{error.inspect} while triggering to pusher: \n #{event}"
+  			Logger.error "#{mode} - ERROR #{error.inspect} while triggering to pusher: \n #{event}"
         raise error
     	end
 

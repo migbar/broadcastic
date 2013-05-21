@@ -6,6 +6,7 @@ require_relative 'broadcastic/channel'
 require_relative 'broadcastic/event'
 require_relative 'broadcastic/callbacks'
 require_relative 'broadcastic/exceptions'
+require_relative 'broadcastic/logger'
 
 module Broadcastic
   ActiveRecord::Base.extend Broadcast

@@ -7,6 +7,7 @@ end
 require 'ostruct'
 require 'rspec'
 require 'active_record'
+require 'logger'
 
 require_relative '../lib/broadcastic'
 
@@ -16,6 +17,12 @@ ActiveRecord::Schema.define do
   self.verbose = false
   create_table :products, :force => true do |t|
     t.string :name
+  end
+end
+
+class Rails
+  def self.logger
+    Logger.new(STDOUT)
   end
 end
 
