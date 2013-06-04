@@ -2,7 +2,7 @@ require 'spec_helper'
 module Broadcastic
 	describe "Broadcastic" do
 
-		it "Should broadcast when an AR is created" do
+		it "broadcasts when an AR is created" do
 
 			undefine_product_class
 

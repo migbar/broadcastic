@@ -25,7 +25,7 @@ describe Broadcastic::Broadcast do
 
 	context "with an invalid recipient" do
 
-		it "Should raise an exception about the recipient method being invalid" do
+		it "raises an exception about the recipient method being invalid" do
 
 			expect  {
 				class Product < ActiveRecord::Base
@@ -38,7 +38,7 @@ describe Broadcastic::Broadcast do
 
 	context "with an valid recipient" do
 
-		it "Should not raise an exception about the recipient method being invalid" do
+		it "Does not raise an exception about the recipient method being invalid" do
 
 			expect  {
 				class Product < ActiveRecord::Base
@@ -56,14 +56,14 @@ describe Broadcastic::Broadcast do
 
 	context "without options" do
 
-		it "should send the appropriate message to Callbacks for each callback type" do
+		it "sends the appropriate message to Callbacks for each callback type" do
 			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {})
 			class Product < ActiveRecord::Base
 				broadcast :changes
 			end
 		end
 
-		it "should send the appropriate message to Callbacks for each callback type" do
+		it "sends the appropriate message to Callbacks for each callback type" do
 			Broadcastic::Callbacks.should_receive(:broadcast_creations).with(Product, {})
 			Broadcastic::Callbacks.should_receive(:broadcast_updates).with(Product, {})
 			class Product < ActiveRecord::Base
@@ -75,7 +75,7 @@ describe Broadcastic::Broadcast do
 
 	context "with options" do
 
-		it "should pass the destination options to the ModelCallbaks" do
+		it "passes the destination options to the ModelCallbaks" do
 			Broadcastic::Callbacks.should_receive(:broadcast_changes).with(Product, {to: :vendors})
 			class Product < ActiveRecord::Base
 				broadcast :changes, to: :vendors

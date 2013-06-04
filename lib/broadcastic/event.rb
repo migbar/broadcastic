@@ -23,7 +23,7 @@ module Broadcastic
     end
 
     def self.channels(resource, options)
-      Channel.destinations_for resource, options
+      ChannelResolver.channels_for resource, options
     end
 
     def initialize(type, resource, channel)

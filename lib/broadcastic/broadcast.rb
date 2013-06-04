@@ -1,6 +1,14 @@
 module Broadcastic
   module Broadcast
 
+    module InstanceMethods
+      def to_broadcastic_channel_name
+        "#{self.class.to_broadcastic_channel_name}/#{id}"
+      end
+    end
+
+    include InstanceMethods
+
     def broadcast(*args)
       destination = get_destination args
 
@@ -17,6 +25,7 @@ module Broadcastic
     def to_broadcastic_channel_name
       "/#{self.name.pluralize.underscore}"
     end
+
 
   end
 end

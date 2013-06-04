@@ -9,7 +9,7 @@ module Broadcastic
 		describe ".broadcast" do
 
 			context "with mutliple events" do
-				it "should call broadcast_event with each of the events passed in" do
+				it "calls broadcast_event with each of the events passed in" do
 					Broadcaster.should_receive(:broadcast_event).with(event1).once
 					Broadcaster.should_receive(:broadcast_event).with(event2).once
 					Broadcaster.broadcast([event1, event2])
@@ -17,7 +17,7 @@ module Broadcastic
 			end
 
 			context "with a single event" do
-				it "should call broadcast_event with the single event passed in" do
+				it "calls broadcast_event with the single event passed in" do
 					Broadcaster.should_receive(:broadcast_event).with(event1).once
 					Broadcaster.broadcast([event1])
 				end
@@ -33,7 +33,7 @@ module Broadcastic
 					Broadcaster.stub(inside_em_loop?: true)
 				end
 
-				it "should asynchronously delegate the broadcast to Pusher" do
+				it "asynchronously delegates the broadcast to Pusher" do
 					pusher_instance = stub
 					Pusher.should_receive(:trigger_async).and_return(pusher_instance.as_null_object)
 
@@ -57,7 +57,7 @@ module Broadcastic
 					Broadcaster.stub(inside_em_loop?: false)
 				end
 
-				it "should asynchronously delegate the broadcast to Pusher" do
+				it "synchronously delegates the broadcast to Pusher" do
 					pusher_instance = stub
 					Pusher.should_receive(:trigger).and_return(pusher_instance.as_null_object)
 
