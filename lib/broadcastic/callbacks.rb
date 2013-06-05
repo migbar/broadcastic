@@ -10,25 +10,19 @@ module Broadcastic
 
     def broadcast_creations(klass, options)
       klass.class_eval do
-        after_create do |record|
-          Broadcaster.broadcast Event.created(record, options)
-        end
+        after_create { |record| Broadcaster.broadcast Event.created(record, options) }
       end
     end
 
     def broadcast_updates(klass, options)
       klass.class_eval do
-        after_update do |record|
-          Broadcaster.broadcast Event.updated(record, options)
-        end
+        after_update { |record| Broadcaster.broadcast Event.updated(record, options) }
       end
     end
 
     def broadcast_destroys(klass, options)
       klass.class_eval do
-        after_destroy do |record|
-          Broadcaster.broadcast Event.destroyed(record, options)
-        end
+        after_destroy { |record| Broadcaster.broadcast Event.destroyed(record, options) }
       end
     end
 
