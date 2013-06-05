@@ -22,7 +22,7 @@ module Broadcastic
 
       def sync_broadcast(event)
         begin
-          Pusher.trigger([event.pusher_channel_name], event.pusher_event_name, event.to_json)
+          Pusher.trigger(event.pusher_channel_names, event.name, event.to_json)
           succeeded(SYNC, event)
         rescue Exception => error
           failed(SYNC, event, error)
@@ -30,13 +30,13 @@ module Broadcastic
       end
 
       def async_broadcast(event)
-        Pusher.trigger_async([event.pusher_channel_name], event.pusher_event_name, event.to_json).
+        Pusher.trigger_async(event.pusher_channel_names, event.name, event.to_json).
           callback { succeeded(ASYNC, event) }.
           errback  { |error| failed(ASYNC, event, error) }
       end
 
     	def succeeded(mode, event)
-    		Logger.debug "********* #{mode}-push \nto channel: '#{event.pusher_channel_name}' \nevent_name: '#{event.pusher_event_name}' \ndata: #{event.to_json} \n*********\n"
+    		Logger.debug "********* #{mode}-push \nto channel: '#{event.pusher_channel_names}' \nevent_name: '#{event.name}' \ndata: #{event.to_json} \n*********\n"
     	end
 
     	def failed(mode, event, error)

@@ -40,11 +40,11 @@ module Broadcastic
 				end
 
 				it "passes the channel name, event name and json to pusher" do
-					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
-					event1.should_receive(:pusher_event_name).and_return "some_event_name"
+					event1.should_receive(:pusher_channel_names).and_return ["some_channel"]
+					event1.should_receive(:name).and_return "some_event_name"
 					event1.should_receive(:to_json).and_return"some_json_string"
 
-					Pusher.should_receive(:trigger_async).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
+					Pusher.should_receive(:trigger_async).with(["some_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end
@@ -63,11 +63,11 @@ module Broadcastic
 				end
 
 				it "passes the channel name, event name and json to pusher" do
-					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
-					event1.should_receive(:pusher_event_name).and_return "some_event_name"
+					event1.should_receive(:pusher_channel_names).and_return ["some_channel"]
+					event1.should_receive(:name).and_return "some_event_name"
 					event1.should_receive(:to_json).and_return"some_json_string"
 
-					Pusher.should_receive(:trigger).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
+					Pusher.should_receive(:trigger).with(["some_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end

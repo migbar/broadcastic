@@ -1,50 +1,44 @@
 module Broadcastic
 	class Event
-    attr_reader :channel
+    attr_reader :channels
     attr_reader :type
     attr_reader :resource
 
     def self.created(resource, options = {})
-      events(:created, resource, options)
+      new(:created, resource, options)
     end
 
     def self.updated(resource, options = {})
-      events(:updated, resource, options)
+      new(:updated, resource, options)
     end
 
     def self.destroyed(resource, options = {})
-      events(:destroyed, resource, options)
+      new(:destroyed, resource, options)
     end
 
-    def self.events(type, resource, options)
-      channels(resource, options).map do |channel|
-        new(type, resource, channel)
-      end
+    def initialize(type, resource, options)
+      @type      = type
+      @resource  = resource
+      @channels  = resolve_channels(resource, options)
     end
 
-    def self.channels(resource, options)
+    def resolve_channels(resource, options)
       ChannelResolver.channels_for resource, options
-    end
-
-    def initialize(type, resource, channel)
-      @type     = type
-      @resource = resource
-      @channel  = channel
     end
 
     def resource_type
       resource.class.name
     end
 
-    def channel_name
-      channel.name
+    def channel_names
+      channels.map(&:name)
     end
 
-    def pusher_channel_name
-      channel.name.gsub(/\//, ".")
+    def pusher_channel_names
+      channel_names.map { |name| name.gsub(/\//, ".") }
     end
 
-    def pusher_event_name
+    def name
       uncapitalize "#{resource_type}#{type.capitalize}".camelize
     end
 
@@ -58,12 +52,10 @@ module Broadcastic
 
     def as_json
       {
-        name:           pusher_event_name,
-        pusher_channel: pusher_channel_name,
+        name:           name,
         event:          type,
         resource_type:  resource_type,
         resource:       resource.as_json,
-        channel:        channel_name
       }
     end
 

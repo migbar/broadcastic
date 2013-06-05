@@ -9,16 +9,16 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :creations, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger).with(["some_url.123"],
+			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
 				"productCreated",
-				"{\"name\":\"productCreated\",\"pusher_channel\":\"some_url.123\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}},\"channel\":\"some_url/123\"}")
+				"{\"name\":\"productCreated\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}")
 
 			Product.create(name: "foo")
 
@@ -31,16 +31,16 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :updates, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger).with(["some_url.123"],
+			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
 				"productUpdated",
-				"{\"name\":\"productUpdated\",\"pusher_channel\":\"some_url.123\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}},\"channel\":\"some_url/123\"}")
+				"{\"name\":\"productUpdated\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}}}")
 
 			Product.create(name: "foo").update_attributes(name: "bar")
 
@@ -53,16 +53,16 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :destroys, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger).with(["some_url.123"],
+			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
 				"productDestroyed",
-				"{\"name\":\"productDestroyed\",\"pusher_channel\":\"some_url.123\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}},\"channel\":\"some_url/123\"}")
+				"{\"name\":\"productDestroyed\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}")
 
 			Product.create(name: "foo").destroy
 
@@ -83,15 +83,15 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :creations, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 			end
 
-			Pusher.should_receive(:trigger_async).with(["some_url.123"],
+			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
 				"productCreated",
-				"{\"name\":\"productCreated\",\"pusher_channel\":\"some_url.123\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}},\"channel\":\"some_url/123\"}").and_return(stub.as_null_object)
+				"{\"name\":\"productCreated\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}").and_return(stub.as_null_object)
 
 			Product.create(name: "foo")
 
@@ -104,16 +104,16 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :updates, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger_async).with(["some_url.123"],
+			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
 				"productUpdated",
-				"{\"name\":\"productUpdated\",\"pusher_channel\":\"some_url.123\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}},\"channel\":\"some_url/123\"}").and_return(stub.as_null_object)
+				"{\"name\":\"productUpdated\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}}}").and_return(stub.as_null_object)
 
 			Product.create(name: "foo").update_attributes(name: "bar")
 
@@ -126,16 +126,16 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :destroys, to: :recipients
 				def recipients
-					["some_url/123"]
+					["some_url/123", "other_url/456"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger_async).with(["some_url.123"],
+			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
 				"productDestroyed",
-				"{\"name\":\"productDestroyed\",\"pusher_channel\":\"some_url.123\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}},\"channel\":\"some_url/123\"}").and_return(stub.as_null_object)
+				"{\"name\":\"productDestroyed\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}").and_return(stub.as_null_object)
 
 			Product.create(name: "foo").destroy
 
@@ -143,12 +143,3 @@ describe "Broadcastic" do
 
 	end
 end
-# <Broadcastic::Event:0x007f82292ede68
-# 	@type=:created,
-# 	@resource=<Broadcastic::Product id: 1, name: "foo">,
-# 	@channel=<Broadcastic::Channel:0x007f82292ee5c0 @name="some_url/123">>
-
-# <Broadcastic::Event:0x007f82292ede18
-# 	@type=:created,
-# 	@resource=<Broadcastic::Product id: 1, name: "foo">,
-# 	@channel=<Broadcastic::Channel:0x007f82292ee188 @name="other_url/12334">>
