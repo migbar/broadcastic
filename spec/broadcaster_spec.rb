@@ -27,15 +27,14 @@ module Broadcastic
 
 		describe ".broadcast_event" do
 
-
 			context "when running as evented" do
+
 				before(:each) do
 					Broadcaster.stub(inside_em_loop?: true)
 				end
 
 				it "asynchronously delegates the broadcast to Pusher" do
-					pusher_instance = stub
-					Pusher.should_receive(:trigger_async).and_return(pusher_instance.as_null_object)
+					Pusher.should_receive(:trigger_async).and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end
@@ -44,12 +43,12 @@ module Broadcastic
 					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
 					event1.should_receive(:pusher_event_name).and_return "some_event_name"
 					event1.should_receive(:to_json).and_return"some_json_string"
-					pusher_instance = stub
 
-					Pusher.should_receive(:trigger_async).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(pusher_instance.as_null_object)
+					Pusher.should_receive(:trigger_async).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end
+
 			end
 
 			context "when not running as evented" do
@@ -58,8 +57,7 @@ module Broadcastic
 				end
 
 				it "synchronously delegates the broadcast to Pusher" do
-					pusher_instance = stub
-					Pusher.should_receive(:trigger).and_return(pusher_instance.as_null_object)
+					Pusher.should_receive(:trigger).and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end
@@ -68,9 +66,8 @@ module Broadcastic
 					event1.should_receive(:pusher_channel_name).and_return "some_pusher_channel"
 					event1.should_receive(:pusher_event_name).and_return "some_event_name"
 					event1.should_receive(:to_json).and_return"some_json_string"
-					pusher_instance = stub
 
-					Pusher.should_receive(:trigger).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(pusher_instance.as_null_object)
+					Pusher.should_receive(:trigger).with(["some_pusher_channel"], "some_event_name", "some_json_string").and_return(stub.as_null_object)
 
 					Broadcaster.broadcast_event(event1)
 				end
