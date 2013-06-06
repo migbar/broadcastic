@@ -29,5 +29,10 @@ module Broadcastic
 			ChannelResolver.channels_for(stub, {to: some_object})
 		end
 
+		it "gets the channels from excuting the lambda if the destination type is a lambda" do
+			channels = ChannelResolver.channels_for(stub, {to: lambda{ 3 + 7 } })
+			expect(channels).to eq [ Channel["10"] ]
+		end
+
 	end
 end
