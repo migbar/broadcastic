@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["miguel@galar.com"]
   s.homepage    = "http://github.com/migbar/broadcastic"
   s.summary     = %q{ActiveRecord callback broadcaster over Pusher}
-  s.description = %q{Easily broadcast your ActiveRecord callbacks using pusher's REST api}
+  s.description = %q{Easily broadcast your CRUD callbacks using Pusher's REST api}
 
   s.add_dependency 'json', '~> 1.7.7'
   s.add_dependency "pusher", "~> 0.11.3"
