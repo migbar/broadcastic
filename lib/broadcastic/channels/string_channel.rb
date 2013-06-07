@@ -1,9 +1,9 @@
 module Broadcastic
 
-	class StringChannel
+	class StringChannel < Channel
 
-		def self.channels(resource, to)
-	    Array(Channel[to])
+		def self.channels_for(resource, to)
+	    Array(self[to])
 		end
 
 	end

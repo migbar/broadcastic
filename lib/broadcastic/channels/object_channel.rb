@@ -1,8 +1,8 @@
 module Broadcastic
-	class ObjectChannel
+	class ObjectChannel < Channel
 
-    def self.channels(resource, recipient_object)
-      Array(Channel[recipient_object.to_broadcastic_channel_name])
+    def self.channels_for(resource, recipient_object)
+      Array(self[recipient_object.to_broadcastic_channel_name])
     end
 
 	end

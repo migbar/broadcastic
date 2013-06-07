@@ -5,7 +5,7 @@ module Broadcastic
 
 		it "turns that object into a channel name" do
 			any_object = stub(to_broadcastic_channel_name: "some_resource_channel")
-			ObjectChannel.channels(stub, any_object).should == [ Channel["some_resource_channel"] ]
+			ObjectChannel.channels_for(stub, any_object).should == [ Channel["some_resource_channel"] ]
 		end
 
 	end

@@ -1,7 +1,7 @@
 module Broadcastic
-	class ProcChannel
+	class ProcChannel < Channel
 
-    def self.channels(resource, proc)
+    def self.channels_for(resource, proc)
       ChannelResolver.channels_for resource, to: proc.call
     end
 

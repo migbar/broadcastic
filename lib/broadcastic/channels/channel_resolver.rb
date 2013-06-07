@@ -3,7 +3,7 @@ module Broadcastic
 
     def self.channels_for(resource, options)
       destination = options[:to]
-      channel_class(destination.class).channels(resource, destination)
+      channel_class(destination.class).channels_for(resource, destination)
     end
 
     def self.channel_class(destination_class)

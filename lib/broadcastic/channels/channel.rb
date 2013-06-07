@@ -7,7 +7,7 @@ module Broadcastic
     end
 
     def self.[](name)
-      channels[name] ||= Channel.new(name)
+      Channel.channels[name] ||= new(name)
     end
 
     def initialize(name)

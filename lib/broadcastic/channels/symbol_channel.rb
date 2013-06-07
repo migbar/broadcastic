@@ -1,8 +1,8 @@
 module Broadcastic
 
-	class SymbolChannel
+	class SymbolChannel < Channel
 
-	  def self.channels(resource, to)
+	  def self.channels_for(resource, to)
     	ChannelResolver.channels_for resource, to: resource.send(to)
 	  end
 

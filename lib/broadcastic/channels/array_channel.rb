@@ -1,8 +1,8 @@
 module Broadcastic
 
-	class ArrayChannel
+	class ArrayChannel < Channel
 
-		def self.channels(resource, to)
+		def self.channels_for(resource, to)
 			to.map { |destination| ChannelResolver.channels_for resource, to: destination }.flatten
 		end
 

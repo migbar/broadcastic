@@ -1,9 +1,9 @@
 module Broadcastic
 
-	class NilClassChannel
+	class NilClassChannel < Channel
 
-		def self.channels(resource, to)
-		  Array(Channel[resource.to_broadcastic_channel_name])
+		def self.channels_for(resource, to)
+		  Array(self[resource.to_broadcastic_channel_name])
 		end
 
 	end
