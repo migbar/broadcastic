@@ -1,5 +1,5 @@
 module Broadcastic
-  class Broadcaster
+  class PusherService
     class << self
 
       ASYNC = "async"

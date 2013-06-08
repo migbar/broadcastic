@@ -9,21 +9,28 @@ module Broadcastic
     end
 
     def broadcast_creations(klass, options)
+      broadcaster = broadcastic_service
       klass.class_eval do
-        after_create { |record| Broadcaster.broadcast Event.created(record, options) }
+        after_create { |record| broadcaster.broadcast Event.created(record, options) }
       end
     end
 
     def broadcast_updates(klass, options)
+      broadcaster = broadcastic_service
       klass.class_eval do
-        after_update { |record| Broadcaster.broadcast Event.updated(record, options) }
+        after_update { |record| broadcaster.broadcast Event.updated(record, options) }
       end
     end
 
     def broadcast_destroys(klass, options)
+      broadcaster = broadcastic_service
       klass.class_eval do
-        after_destroy { |record| Broadcaster.broadcast Event.destroyed(record, options) }
+        after_destroy { |record| broadcaster.broadcast Event.destroyed(record, options) }
       end
+    end
+
+    def broadcastic_service
+      Rails.configuration.broadcastic_service || PusherService
     end
 
     def method_missing(method_name, *arguments, &block)

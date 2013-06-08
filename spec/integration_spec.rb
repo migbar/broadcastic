@@ -73,7 +73,7 @@ describe "Broadcastic" do
 	context	"Running on an evented server" do
 
 		before(:each) do
-			Broadcastic::Broadcaster.stub(inside_em_loop?: true)
+			Broadcastic::PusherService.stub(inside_em_loop?: true)
 		end
 
 		it "broadcasts through the service when a record is created" do
@@ -126,14 +126,14 @@ describe "Broadcastic" do
 		  class Product < ActiveRecord::Base
 				broadcast :destroys, to: :recipients
 				def recipients
-					["some_url/123", "other_url/456"]
+					["some_url/123", "other_url"]
 				end
 
 				def id; 1; end
 
 			end
 
-			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
+			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url"],
 				"productDestroyed",
 				"{\"name\":\"productDestroyed\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}").and_return(stub.as_null_object)
 

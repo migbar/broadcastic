@@ -24,6 +24,10 @@ class Rails
   def self.logger
     Logger.new(STDOUT)
   end
+
+  def self.configuration
+    Struct.new(:broadcastic_service).new
+  end
 end
 
 def undefine_product_class
