@@ -33,13 +33,19 @@ If you are running on a non-evented server, Broadcastic will revert to calling P
  your pusher connected clients using minimal code in your ActiveRecord models.
 
 ### broadcasting ActiveRecord changes:
+There are a few options when setting what you when you want to broadcast and who do you want to broadcast to.
+
+The following example will broadcast an event to all users with a role of :admin after a new Product record is inserted into the
+products table.
 
 ```ruby
 class Product < ActiveRecord::Base
-	broadcast :changes to: admins
+  broadcast :creations to: lambda{ User.product_managers }
+end
 
-	def admins
-		User.with_role :admin
-	end
+class User < ActiveRecord::Base
+  def self.product_managers
+    # ... some code to get the product managers
+  end
 end
 ```
