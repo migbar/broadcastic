@@ -18,4 +18,13 @@ require_relative 'broadcastic/channels/nil_class_channel'
 
 module Broadcastic
   ActiveRecord::Base.extend Broadcast
+
+# The service wrapper to use
+  mattr_accessor :service
+  @@service = PusherService
+
+  def self.configure
+  	yield self
+  end
+
 end
