@@ -1,145 +1,37 @@
 require 'spec_helper'
-describe "Broadcastic" do
+describe Broadcastic do
 
-	context "Running on a non-evented server" do
-		it "broadcasts through the service when a record is created" do
+	context "Using default configuration" do
 
+		it "delegates the broadcast to the PusherService" do
 			undefine_product_class
 
 		  class Product < ActiveRecord::Base
-				broadcast :creations, to: :recipients
-				def recipients
-					["some_url/123", "other_url/456"]
-				end
-
-				def id; 1; end
-
+				broadcast :creations
 			end
 
-			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
-				"productCreated",
-				"{\"name\":\"productCreated\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}")
+			Broadcastic::PusherService.should_receive(:broadcast)
 
 			Product.create(name: "foo")
-
-		end
-
-		it "broadcasts through the service when a record is updated" do
-
-			undefine_product_class
-
-		  class Product < ActiveRecord::Base
-				broadcast :updates, to: :recipients
-				def recipients
-					["some_url/123", "other_url/456"]
-				end
-
-				def id; 1; end
-
-			end
-
-			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
-				"productUpdated",
-				"{\"name\":\"productUpdated\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}}}")
-
-			Product.create(name: "foo").update_attributes(name: "bar")
-
-		end
-
-		it "broadcasts through the service when a record is destroyed" do
-
-			undefine_product_class
-
-		  class Product < ActiveRecord::Base
-				broadcast :destroys, to: :recipients
-				def recipients
-					["some_url/123", "other_url/456"]
-				end
-
-				def id; 1; end
-
-			end
-
-			Pusher.should_receive(:trigger).with(["some_url.123", "other_url.456"],
-				"productDestroyed",
-				"{\"name\":\"productDestroyed\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}")
-
-			Product.create(name: "foo").destroy
-
 		end
 
 	end
 
-	context	"Running on an evented server" do
+	context "Configured to use the stubbed service" do
 
-		before(:each) do
-			Broadcastic::PusherService.stub(inside_em_loop?: true)
-		end
-
-		it "broadcasts through the service when a record is created" do
-
+		it "delegates the broadcast to the StubService" do
 			undefine_product_class
+			Broadcastic.stub(service: Broadcastic::StubService)
 
 		  class Product < ActiveRecord::Base
-				broadcast :creations, to: :recipients
-				def recipients
-					["some_url/123", "other_url/456"]
-				end
-
-				def id; 1; end
+				broadcast :creations
 			end
 
-			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
-				"productCreated",
-				"{\"name\":\"productCreated\",\"event\":\"created\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}").and_return(stub.as_null_object)
+			Broadcastic::StubService.should_receive(:broadcast)
 
 			Product.create(name: "foo")
-
-		end
-
-		it "broadcasts through the service when a record is updated" do
-
-			undefine_product_class
-
-		  class Product < ActiveRecord::Base
-				broadcast :updates, to: :recipients
-				def recipients
-					["some_url/123", "other_url/456"]
-				end
-
-				def id; 1; end
-
-			end
-
-			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url.456"],
-				"productUpdated",
-				"{\"name\":\"productUpdated\",\"event\":\"updated\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"bar\"}}}").and_return(stub.as_null_object)
-
-			Product.create(name: "foo").update_attributes(name: "bar")
-
-		end
-
-		it "broadcasts through the service when a record is destroyed" do
-
-			undefine_product_class
-
-		  class Product < ActiveRecord::Base
-				broadcast :destroys, to: :recipients
-				def recipients
-					["some_url/123", "other_url"]
-				end
-
-				def id; 1; end
-
-			end
-
-			Pusher.should_receive(:trigger_async).with(["some_url.123", "other_url"],
-				"productDestroyed",
-				"{\"name\":\"productDestroyed\",\"event\":\"destroyed\",\"resource_type\":\"Product\",\"resource\":{\"product\":{\"id\":1,\"name\":\"foo\"}}}").and_return(stub.as_null_object)
-
-			Product.create(name: "foo").destroy
-
 		end
 
 	end
+
 end
